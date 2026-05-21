@@ -1,21 +1,21 @@
 # CVInsight AI — Intelligent Resume Analyzer
 
-CVInsight AI হলো একটি এআই-চালিত উন্নত রেজ্যুমে বিশ্লেষণ প্ল্যাটফর্ম। এটি রেজ্যুমে আপলোড করার পর সেটির টেক্সট এক্সট্রাক্ট করে এবং AI (GPT-4o) ব্যবহার করে রেজ্যুমেটিকে ATS (Applicant Tracking System) স্ট্যান্ডার্ড অনুযায়ী মূল্যায়ন করে। এটি চাকরিপ্রার্থীদের রেজ্যুমে অপ্টিমাইজ করতে এবং ক্যারিয়ারের পরবর্তী ধাপ সম্পর্কে সুনির্দিষ্ট পরামর্শ প্রদান করে।
+CVInsight AI is an AI-powered advanced resume analysis platform. After a user uploads a resume, the system extracts the text and uses AI (GPT-4o) to evaluate it based on ATS (Applicant Tracking System) standards. It provides job seekers with actionable feedback to optimize their resumes and professional growth roadmap.
 
 ---
 
-## 🚀 মূল বৈশিষ্ট্যসমূহ (Key Features)
+## 🚀 Key Features
 
-*   **AI-Powered Analysis:** GPT-4o ব্যবহার করে রেজ্যুমের ATS সামঞ্জস্যতা, স্কিলস, এবং অভিজ্ঞতার গুণগত মান মূল্যায়ন।
-*   **Robust Extraction:** PDF এবং DOCX ফাইল থেকে টেক্সট এক্সট্রাকশন।
-*   **OCR Fallback:** স্ক্যান করা বা ইমেজ-বেসড রেজ্যুমের জন্য `Tesseract.js` ব্যবহার করে OCR সাপোর্ট।
-*   **Multi-Dimensional Scoring:** ATS, স্কিলস, অভিজ্ঞতা, গ্রামার এবং ফরম্যাটিংয়ের ওপর ভিত্তি করে ১০০-র মধ্যে স্কোর প্রদান।
-*   **Actionable Insights:** রেজ্যুমে উন্নয়নের জন্য সুনির্দিষ্ট পরামর্শ এবং ক্যারিয়ার রোডম্যাপ।
-*   **Production-Ready API:** এপিআই-ফার্স্ট ডিজাইন, যা দ্রুত এবং নিরাপদ ডেটা প্রসেসিং নিশ্চিত করে।
+*   **AI-Powered Analysis:** Uses GPT-4o to evaluate ATS compatibility, skill relevance, and experience quality.
+*   **Robust Extraction:** Automated text extraction from PDF and DOCX files.
+*   **OCR Fallback:** Uses `Tesseract.js` for OCR support for scanned or image-based resumes.
+*   **Multi-Dimensional Scoring:** Provides normalized scores (out of 100) for ATS, skills, experience, grammar, and formatting.
+*   **Actionable Insights:** Delivers specific suggestions for resume improvement and career progression.
+*   **Production-Ready API:** API-first design ensuring fast and secure data processing.
 
 ---
 
-## 🛠 টেকনোলজি স্ট্যাক (Tech Stack)
+## 🛠 Tech Stack
 
 ### Frontend
 *   **Framework:** Next.js, React
@@ -33,71 +33,71 @@ CVInsight AI হলো একটি এআই-চালিত উন্নত �
 
 ---
 
-## ⚙️ সেটআপ নির্দেশিকা (Getting Started)
+## ⚙️ Getting Started
 
-### ১. রিকোয়ারমেন্টস
-আপনার মেশিনে অবশ্যই **Node.js (v18+)** এবং **MongoDB** ইনস্টল থাকতে হবে।
+### 1. Requirements
+Ensure you have **Node.js (v18+)** and **MongoDB** installed on your machine.
 
-### ২. প্রজেক্ট কনফিগারেশন
-প্রথমে রুট ডিরেক্টরিতে প্রজেক্টটি ক্লোন করুন এবং ডিপেনডেন্সি ইনস্টল করুন:
+### 2. Project Configuration
+Clone the repository and install dependencies:
 
 ```bash
-# Backend সেটআপ
+# Backend Setup
 cd backend
 npm install
 
-# Frontend সেটআপ
+# Frontend Setup
 cd ../frontend
 npm install
 ```
 
-### ৩. এনভায়রনমেন্ট ভেরিয়েবল (.env)
-*   `backend/.env` ফাইল তৈরি করুন:
+### 3. Environment Variables (.env)
+*   Create `backend/.env`:
     ```env
     OPENAI_API_KEY=your_openai_key
     MONGO_URI=your_mongodb_uri
     JWT_SECRET=your_jwt_secret
     ```
-*   `frontend/.env.local` ফাইল তৈরি করুন:
+*   Create `frontend/.env.local`:
     ```env
     NEXT_PUBLIC_API_URL=http://localhost:5000/api
     ```
 
-### ৪. প্রজেক্ট রান করা
+### 4. Running the Project
 ```bash
-# Backend রান করুন
+# Run Backend
 cd backend
 npm run dev
 
-# Frontend রান করুন
+# Run Frontend
 cd ../frontend
 npm run dev
 ```
 
 ---
 
-## 🔗 API ডকুমেন্টেশন (সংক্ষিপ্ত)
+## 🔗 API Documentation (Overview)
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/api/resume/upload` | রেজ্যুমে ফাইল আপলোড এবং এআই বিশ্লেষণ। |
-| `GET` | `/api/resume/history` | পূর্ববর্তী রেজ্যুমে বিশ্লেষণের ইতিহাস। |
+| `POST` | `/api/resume/upload` | Upload resume and perform AI analysis. |
+| `GET` | `/api/resume/history` | Retrieve past analysis logs for the authenticated user. |
 
 ---
 
-## 🏗 সিস্টেম আর্কিটেকচার
-এই প্রজেক্টটি একটি মাইক্রোসার্ভিস আর্কিটেকচার অনুসরণ করে। ব্যাকএন্ডে একটি মাল্টি-লেয়ার পাইপলাইন রয়েছে:
-1. **Extraction Layer:** ফাইল থেকে টেক্সট সংগ্রহ।
-2. **OCR Fallback:** এক্সট্রাকশন ব্যর্থ হলে ইমেজ প্রসেসিং।
-3. **AI Evaluation Layer:** GPT-4o দ্বারা বিশ্লেষণ।
-4. **Data Layer:** মঙ্গোডিবিতে ফলাফল সংরক্ষণ।
+## 🏗 System Architecture
+This project follows a microservice-inspired architecture with a multi-layer pipeline:
+1. **Extraction Layer:** Collects text from files.
+2. **OCR Fallback:** Image processing for scanned files.
+3. **AI Evaluation Layer:** Analysis performed by GPT-4o.
+4. **Data Layer:** Results persisted in MongoDB.
 
 ---
 
-## 🤝 কন্ট্রিবিউশন
-এই প্রজেক্টটি ওপেন সোর্স। আপনি যদি নতুন ফিচার যোগ করতে চান অথবা বাগ ফিক্স করতে চান, তবে একটি `Pull Request` দিন।
+## 🤝 Contribution
+This project is open-source. Feel free to submit a `Pull Request` for new features or bug fixes.
 
 ---
 
-## ⚖️ লাইসেন্স
-এই প্রজেক্টটি [MIT License](LICENSE) এর অধীনে লাইসেন্সপ্রাপ্ত।
+## ⚖️ License
+This project is licensed under the [MIT License](LICENSE).
