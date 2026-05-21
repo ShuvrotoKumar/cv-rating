@@ -4,11 +4,19 @@ import { Input } from "@/components/ui/input";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm();
+  const login = useAuthStore((state) => state.login);
+  const router = useRouter();
   
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    // Simulate API call
+    login({ id: "1", email: data.email, name: "User" });
+    router.push("/dashboard");
+  };
 
   return (
     <AuthLayout title="Welcome back" subtitle="Enter your credentials to access your account">
