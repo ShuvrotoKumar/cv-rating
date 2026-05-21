@@ -1,5 +1,6 @@
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
+const Tesseract = require('tesseract.js');
 const { OpenAI } = require('openai');
 const Resume = require('../models/Resume');
 
@@ -158,8 +159,20 @@ const uploadAndAnalyzeResume = async (req, res) => {
 
     const cleanText = cleanExtractedText(extractedText);
     
+    // Attempt OCR Fallback if extraction is insufficient
+    let finalCleanText = cleanText;
+    if (finalCleanText.length < 50) {
+      console.log('Insufficient text extracted, attempting OCR fallback...');
+      try {
+        const { data: { text: ocrText } } = await Tesseract.recognize(buffer, 'eng');
+        finalCleanText = cleanExtractedText(ocrText);
+      } catch (ocrErr) {
+        console.error('OCR fallback failed:', ocrErr.message);
+      }
+    }
+
     // CRITICAL ERROR HANDLING
-    if (cleanText.length < 50) {
+    if (finalCleanText.length < 50) {
       return res.status(400).json({
         status: "error",
         errorType: "EMPTY_RESUME_TEXT",
@@ -170,13 +183,12 @@ const uploadAndAnalyzeResume = async (req, res) => {
           "DOCX extraction failed",
           "Backend did not pass extracted text",
           "File upload corrupted",
-          "pdf-parse returned empty output",
-          "Unsupported file format",
-          "File buffer handling issue in backend"
+          "pdf-parse/mammoth returned empty output",
+          "OCR fallback failed",
+          "Unsupported file format"
         ],
         recommendedFix: [
           "Verify pdf-parse and mammoth extraction logic",
-          "Add OCR fallback (Tesseract.js or Google Vision API)",
           "Log extracted text before sending to AI",
           "Validate file buffer in Multer middleware",
           "Test multiple resume formats",
