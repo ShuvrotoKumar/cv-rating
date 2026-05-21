@@ -1,27 +1,79 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 248 250 252; /* slate-50 */
-    --foreground: 15 23 42;   /* slate-900 */
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
-    --primary: 99 102 241;    /* indigo-500 */
-    --primary-foreground: 255 255 255;
-    --secondary: 100 116 139;  /* slate-500 */
-    --accent: 6 182 212;      /* cyan-500 */
-    --border: 226 232 240;    /* slate-200 */
-    --radius: 1rem;
+@theme {
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --animate-scan: scan 3s linear infinite;
+  --animate-pulse-slow: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes scan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(300px); opacity: 0; }
   }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.35; }
+  }
+}
+
+:root {
+  --background: 255 255 255;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --primary: #4F46E5;
+  --accent: #06B6D4;
+  --border: 226 232 240;
+  --muted: 100 116 139;
+  --glow-color: rgba(79, 70, 229, 0.15);
+}
+
+[data-theme='dark'] {
+  --background: 9 11 20;
+  --foreground: 241 245 249;
+  --card: 15 19 32;
+  --card-foreground: 241 245 249;
+  --primary: #6366F1;
+  --accent: #22D3EE;
+  --border: 30 41 59;
+  --muted: 148 163 184;
+  --glow-color: rgba(99, 102, 241, 0.25);
 }
 
 body {
-  @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] antialiased;
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-@layer utilities {
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
-  }
+/* Premium Glassmorphism & UI Utilities */
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
 }
+
+[data-theme='dark'] .glass-card {
+  background: rgba(15, 19, 32, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.radial-grid {
+  background-size: 40px 40px;
+  background-image: radial-gradient(circle, rgba(99, 102, 241, 0.07) 1px, transparent 1px);
+}
+
+[data-theme='dark'] .radial-grid {
+  background-image: radial-gradient(circle, rgba(99, 102, 241, 0.12) 1px, transparent 1px);
+}
+
+.glow-glow {
+  filter: drop-shadow(0 0 15px var(--glow-color));
+}
+
