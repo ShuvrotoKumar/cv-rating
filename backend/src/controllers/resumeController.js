@@ -248,7 +248,7 @@ const uploadAndAnalyzeResume = async (req, res) => {
             },
             {
               role: 'user',
-              content: `{"resumeText": "${cleanText}"}`
+              content: `{"resumeText": "${finalCleanText}"}`
             }
           ]
         });
@@ -263,11 +263,11 @@ const uploadAndAnalyzeResume = async (req, res) => {
         };
       } catch (gptErr) {
         console.error('OpenAI processing error, falling back to local NLP:', gptErr.message);
-        analysisResult = analyzeTextLocally(originalname, sizeStr, cleanText);
+        analysisResult = analyzeTextLocally(originalname, sizeStr, finalCleanText);
       }
     } else {
       // Local programmatic parsing
-      analysisResult = analyzeTextLocally(originalname, sizeStr, cleanText);
+      analysisResult = analyzeTextLocally(originalname, sizeStr, finalCleanText);
     }
 
     // Step C: Persist result to Mongo (if connected) or push to memory sandbox array
