@@ -5,6 +5,8 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import api from "@/lib/api";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm();
