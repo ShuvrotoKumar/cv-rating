@@ -4,18 +4,22 @@ import { Input } from "@/components/ui/input";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm();
   const login = useAuthStore((state) => state.login);
   const router = useRouter();
   
-  const onSubmit = (data: any) => {
-    // Simulate API call
-    login({ id: "1", email: data.email, name: "User" });
-    router.push("/dashboard");
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await api.post("/auth/login", data);
+      login(response.data.user);
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data?.message || error.message);
+      // You should add proper toast notification here
+    }
   };
 
   return (
