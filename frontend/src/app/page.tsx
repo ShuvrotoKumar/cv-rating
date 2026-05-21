@@ -1,10 +1,13 @@
+import { Hero } from "@/components/landing/Hero";
+import { Features } from "@/components/landing/Features";
+import { Pricing } from "@/components/landing/Pricing";
+
 export default function LandingPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-6xl font-bold text-primary">CVInsight AI</h1>
-      <p className="mt-4 text-xl text-secondary">
-        Analyze your resume with cutting-edge AI.
-      </p>
+    <main className="min-h-screen">
+      <Hero />
+      <Features />
+      <Pricing />
     </main>
   );
 }

@@ -1,19 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 248, 250, 252;
-  --background-end-rgb: 241, 245, 249;
+@layer base {
+  :root {
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 15 23 42;   /* slate-900 */
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+    --primary: 99 102 241;    /* indigo-500 */
+    --primary-foreground: 255 255 255;
+    --secondary: 100 116 139;  /* slate-500 */
+    --accent: 6 182 212;      /* cyan-500 */
+    --border: 226 232 240;    /* slate-200 */
+    --radius: 1rem;
+  }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] antialiased;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
+  }
 }
