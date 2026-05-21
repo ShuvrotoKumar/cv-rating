@@ -5,10 +5,25 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
+
 export default function RegisterPage() {
   const { register, handleSubmit } = useForm();
+  const login = useAuthStore((state) => state.login);
+  const router = useRouter();
   
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await api.post("/auth/register", data);
+      login(response.data.user);
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Registration failed:", error.response?.data?.message || error.message);
+      // You should add proper toast notification here
+    }
+  };
 
   return (
     <AuthLayout title="Create an account" subtitle="Get started with CVInsight AI today">
