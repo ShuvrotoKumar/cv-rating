@@ -157,6 +157,41 @@ const uploadAndAnalyzeResume = async (req, res) => {
     }
 
     const cleanText = cleanExtractedText(extractedText);
+    
+    // CRITICAL ERROR HANDLING
+    if (cleanText.length < 50) {
+      return res.status(400).json({
+        status: "error",
+        errorType: "EMPTY_RESUME_TEXT",
+        message: "Resume text was not provided or extraction failed in backend.",
+        severity: "high",
+        possibleCauses: [
+          "PDF is scanned or image-based",
+          "DOCX extraction failed",
+          "Backend did not pass extracted text",
+          "File upload corrupted",
+          "pdf-parse returned empty output",
+          "Unsupported file format",
+          "File buffer handling issue in backend"
+        ],
+        recommendedFix: [
+          "Verify pdf-parse and mammoth extraction logic",
+          "Add OCR fallback (Tesseract.js or Google Vision API)",
+          "Log extracted text before sending to AI",
+          "Validate file buffer in Multer middleware",
+          "Test multiple resume formats",
+          "Improve backend error handling and debugging logs"
+        ],
+        debugHints: {
+          checkPdfParse: true,
+          checkMammoth: true,
+          checkFileBuffer: true,
+          checkFileMimeType: true,
+          enableOcrFallback: true
+        }
+      });
+    }
+
     let analysisResult = null;
 
     // Step B: Live OpenAI GPT or local programmatic NLP fallbacks
@@ -168,26 +203,40 @@ const uploadAndAnalyzeResume = async (req, res) => {
           messages: [
             {
               role: 'system',
-              content: 'You are an advanced expert ATS scanner, resume auditor, and technical recruiter. Parse the resume text and return structured JSON matching the instructions.'
+              content: `You are an advanced AI Resume Analysis engine inside a production SaaS platform. 
+              You act as a Senior HR Recruiter, ATS, Career Coach, and Technical Resume Evaluator.
+              
+              Analyze the resume text and return structured JSON ONLY.
+              
+              Rules:
+              - You are NOT a chatbot.
+              - You MUST NOT ask questions.
+              - You MUST NOT request resume text.
+              - You MUST NOT explain anything in natural language.
+              - You MUST NOT output markdown or text outside JSON.
+              - You MUST ALWAYS return valid JSON.
+              
+              Output Format:
+              {
+                "status": "success",
+                "overallScore": 0,
+                "atsScore": 0,
+                "skillsScore": 0,
+                "experienceScore": 0,
+                "grammarScore": 0,
+                "formattingScore": 0,
+                "strengths": [],
+                "weaknesses": [],
+                "suggestions": [],
+                "missingSections": [],
+                "recommendedRoles": [],
+                "keywordAnalysis": [],
+                "careerInsight": ""
+              }`
             },
             {
               role: 'user',
-              content: `Analyze this resume text and return a JSON object with these fields:
-              - overallScore (0-100)
-              - atsScore (0-100)
-              - skillsScore (0-100)
-              - grammarScore (0-100)
-              - formattingScore (0-100)
-              - strengths (array of strings)
-              - weaknesses (array of strings)
-              - suggestions (array of objects: {category, description, impact: 'High'|'Medium'|'Low'})
-              - skillsList (array of objects: {name, match: boolean, level: 'Expert'|'Intermediate'|'Beginner'})
-              - keywordsFound (array of strings)
-              - keywordsMissing (array of strings)
-              - recommendedRoles (array of objects: {role, salary, matchPercentage, reasons: array of strings})
-              
-              Resume content:
-              ${cleanText}`
+              content: `{"resumeText": "${cleanText}"}`
             }
           ]
         });
