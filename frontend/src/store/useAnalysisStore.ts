@@ -28,6 +28,7 @@ interface AnalysisState {
   isProcessing: boolean;
   error: string | null;
   addAnalysis: (analysis: AnalysisResult) => void;
+  deleteAnalysis: (id: string) => void;
   setActiveAnalysis: (id: string) => void;
   setUploading: (uploading: boolean) => void;
   setUploadProgress: (progress: number) => void;
@@ -175,6 +176,10 @@ export const useAnalysisStore = create<AnalysisState>()(
       error: null,
 
       addAnalysis: (analysis) => set((state) => ({ analyses: [analysis, ...state.analyses] })),
+      deleteAnalysis: (id) => set((state) => ({ 
+        analyses: state.analyses.filter((a) => a.id !== id),
+        activeAnalysis: state.activeAnalysis?.id === id ? null : state.activeAnalysis
+      })),
       setActiveAnalysis: (id) => {
         const found = get().analyses.find((a) => a.id === id);
         set({ activeAnalysis: found || null });

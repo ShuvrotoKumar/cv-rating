@@ -1,15 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { ConfirmationDialog } from "@/components/dashboard/ConfirmationDialog";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Button } from "@/components/ui/button";
 import { ScoreCard } from "@/components/dashboard/ScoreCard";
-import { FileUp, TrendingUp, HelpCircle, Layers, CheckCircle2 } from "lucide-react";
+import { FileUp, TrendingUp, HelpCircle, Layers, CheckCircle2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function DashboardPage() {
-  const { analyses } = useAnalysisStore();
+  const { analyses, deleteAnalysis } = useAnalysisStore();
+  const [analysisToDelete, setAnalysisToDelete] = useState<string | null>(null);
 
   // Dynamically calculate metrics from Zustand store
   const totalResumes = analyses.length;
@@ -154,15 +157,24 @@ export default function DashboardPage() {
                       <p className="text-[10px] text-slate-400 font-medium">{item.date} • {item.fileSize}</p>
                     </div>
                     
-                    <div className="flex items-center gap-3">
-                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${getScoreBadgeClass(item.overallScore)}`}>
-                        {item.overallScore}%
-                      </span>
-                      <Button variant="outline" size="sm" asChild className="h-8 rounded-xl px-3 border-slate-200 dark:border-slate-800">
-                        <Link href={`/dashboard/results/${item.id}`}>View</Link>
-                      </Button>
-                    </div>
-                  </motion.div>
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${getScoreBadgeClass(item.overallScore)}`}>
+                      {item.overallScore}%
+                    </span>
+                    <Button variant="outline" size="sm" asChild className="h-8 rounded-xl px-3 border-slate-200 dark:border-slate-800">
+                      <Link href={`/dashboard/results/${item.id}`}>View</Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                      onClick={() => setAnalysisToDelete(item.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+
                 ))
               ) : (
                 <EmptyState
@@ -176,6 +188,20 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      
+      <ConfirmationDialog
+        isOpen={!!analysisToDelete}
+        onClose={() => setAnalysisToDelete(null)}
+        onConfirm={() => {
+          if (analysisToDelete) {
+            deleteAnalysis(analysisToDelete);
+            setAnalysisToDelete(null);
+          }
+        }}
+        title="Delete CV Analysis"
+        description="Are you sure you want to delete this CV analysis? This action cannot be undone."
+        confirmText="Delete"
+      />
     </div>
   );
 }
