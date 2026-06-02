@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { ScoreCard } from "@/components/dashboard/ScoreCard";
-import { InsightPanel } from "@/components/dashboard/InsightPanel";
+// import { InsightPanel } from "@/components/dashboard/InsightPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Award, FileText, CheckCircle2, AlertTriangle, PenTool, Layout } from "lucide-react";
 import Link from "next/link";
 import { useToastStore } from "@/store/useToastStore";
+
+const InsightPanel = dynamic(() => import("@/components/dashboard/InsightPanel").then((mod) => mod.InsightPanel), {
+  ssr: false,
+  loading: () => <div className="p-8 border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 glass-card rounded-3xl h-64 flex items-center justify-center">Loading insights...</div>,
+});
 
 export default function AnalysisResultsPage() {
   const params = useParams();
