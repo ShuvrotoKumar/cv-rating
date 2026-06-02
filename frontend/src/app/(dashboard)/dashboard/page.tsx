@@ -1,5 +1,6 @@
 "use client";
 
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Button } from "@/components/ui/button";
 import { ScoreCard } from "@/components/dashboard/ScoreCard";
@@ -137,31 +138,40 @@ export default function DashboardPage() {
             </div>
 
             <div className="divide-y divide-slate-100 dark:divide-slate-800/60 overflow-y-auto max-h-[260px] pr-1">
-              {analyses.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="py-3.5 flex justify-between items-center group/item hover:bg-slate-50/20 dark:hover:bg-slate-900/20 rounded-xl px-2 transition-all"
-                >
-                  <div className="space-y-1">
-                    <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 max-w-[170px] truncate group-hover/item:text-primary transition-colors">
-                      {item.fileName}
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-medium">{item.date} • {item.fileSize}</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${getScoreBadgeClass(item.overallScore)}`}>
-                      {item.overallScore}%
-                    </span>
-                    <Button variant="outline" size="sm" asChild className="h-8 rounded-xl px-3 border-slate-200 dark:border-slate-800">
-                      <Link href={`/dashboard/results/${item.id}`}>View</Link>
-                    </Button>
-                  </div>
-                </motion.div>
-              ))}
+              {analyses.length > 0 ? (
+                analyses.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="py-3.5 flex justify-between items-center group/item hover:bg-slate-50/20 dark:hover:bg-slate-900/20 rounded-xl px-2 transition-all"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 max-w-[170px] truncate group-hover/item:text-primary transition-colors">
+                        {item.fileName}
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-medium">{item.date} • {item.fileSize}</p>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${getScoreBadgeClass(item.overallScore)}`}>
+                        {item.overallScore}%
+                      </span>
+                      <Button variant="outline" size="sm" asChild className="h-8 rounded-xl px-3 border-slate-200 dark:border-slate-800">
+                        <Link href={`/dashboard/results/${item.id}`}>View</Link>
+                      </Button>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <EmptyState
+                  title="No CVs Uploaded"
+                  description="You haven't uploaded any CVs yet. Upload your first CV to start getting AI-powered feedback."
+                  buttonText="Upload Your First CV"
+                  href="/dashboard/upload"
+                />
+              )}
             </div>
           </div>
         </div>
