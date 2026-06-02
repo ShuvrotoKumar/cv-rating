@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Navbar } from "@/components/dashboard/Navbar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useThemeStore } from "@/store/useThemeStore";
-import { ToastSystem } from "@/components/ui/ToastSystem";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { useRouter } from "next/navigation";
 
 export default function DashboardLayout({
@@ -50,12 +50,9 @@ export default function DashboardLayout({
         
         {/* Dynamic page contents scrolled under navbar */}
         <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50/50 dark:bg-slate-950/20 radial-grid">
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
         </main>
       </div>
-
-      {/* Global notifications overlays */}
-      <ToastSystem />
     </div>
   );
 }
