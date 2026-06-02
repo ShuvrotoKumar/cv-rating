@@ -164,14 +164,16 @@ export default function DashboardPage() {
                     <Button variant="outline" size="sm" asChild className="h-8 rounded-xl px-3 border-slate-200 dark:border-slate-800">
                       <Link href={`/dashboard/results/${item.id}`}>View</Link>
                     </Button>
-                    <Button
+                      <Button
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20"
                       onClick={() => setAnalysisToDelete(item.id)}
+                      aria-label="Delete CV analysis"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
+
                   </div>
                 </motion.div>
 

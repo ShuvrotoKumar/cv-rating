@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { ScoreCard } from "@/components/dashboard/ScoreCard";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,15 @@ export default function AdminDashboardPage() {
 
   // Sample candidate listings
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
   const initialCandidates = [
     { id: "usr_92", name: "Alex Rivers", email: "alex.r@google.com", uploads: 4, lastScore: 89, date: "May 21, 2026", status: "Active" },
     { id: "usr_104", name: "Sara Jenkins", email: "sara.j@netflix.com", uploads: 2, lastScore: 74, date: "May 19, 2026", status: "Active" },
@@ -50,8 +59,8 @@ export default function AdminDashboardPage() {
 
   const filteredCandidates = candidates.filter(
     (c) =>
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.email.toLowerCase().includes(searchTerm.toLowerCase())
+      c.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      c.email.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   return (
@@ -118,7 +127,11 @@ export default function AdminDashboardPage() {
                 <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Maintenance Standard</span>
                 <p className="text-[10px] text-slate-400 max-w-[170px] leading-relaxed">Locks sandbox uploads during server upgrades.</p>
               </div>
-              <button onClick={handleToggleMaintenance} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+              <button 
+                onClick={handleToggleMaintenance} 
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                aria-label={`Toggle maintenance mode, currently ${maintenanceMode ? "activated" : "deactivated"}`}
+              >
                 {maintenanceMode ? (
                   <ToggleRight className="w-9 h-9 text-rose-500" />
                 ) : (
@@ -133,7 +146,11 @@ export default function AdminDashboardPage() {
                 <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Fidelity AI Auditing</span>
                 <p className="text-[10px] text-slate-400 max-w-[170px] leading-relaxed">Enables high-fidelity parsing via GPT-4o systems.</p>
               </div>
-              <button onClick={handleToggleAIModel} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+              <button 
+                onClick={handleToggleAIModel} 
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                aria-label={`Toggle AI model fidelity, currently ${aiHeavyModel ? "high-fidelity" : "standard speed"}`}
+              >
                 {aiHeavyModel ? (
                   <ToggleRight className="w-9 h-9 text-emerald-500" />
                 ) : (
@@ -155,13 +172,15 @@ export default function AdminDashboardPage() {
             {/* Search Input Bar */}
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search candidate index..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-950/80 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-slate-800 dark:text-white"
-              />
+                <input
+                  type="text"
+                  placeholder="Search candidate index..."
+                  aria-label="Search candidates"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-950/80 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-slate-800 dark:text-white"
+                />
+
             </div>
           </div>
 
